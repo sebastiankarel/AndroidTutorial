@@ -1,4 +1,4 @@
-package de.annastutorials.tutorialapplication
+package de.sebastiankarel.tutorialapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

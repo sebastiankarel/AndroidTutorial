@@ -15,6 +15,6 @@ Implement a simple calculator as seen in the screenshot. Add the UI elements to 
 ## Task 2
 Implement a simple maze like game with multiple screen using the navigation framework. Each screen shows 3 buttons (Door 1, Door 2, Door 3). On each screen, one of the buttons leads to the next screen, the others navigate back to the first screen. In the former case a Toast message should indicate success (e.g. "Correct!") and in the latter case the message should indicate that the user chose the wrong door.
 ### Hints
-+ Create a base fragment and inherit from it to save some code. The layout can be inflated in the base fragment. The click behaviour should be in each derived class.
+* Create a base fragment and inherit from it to save some code. The layout can be inflated in the base fragment. The click behaviour should be in each derived class.
 * You can use a global navigation action to take the user back to the beginning from any screen. This drastically reduces the number of navigation actions.
 * Consider overiding onBackPressed() since the user should not be able to go back.
