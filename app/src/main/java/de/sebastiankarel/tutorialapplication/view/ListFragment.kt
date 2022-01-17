@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.sebastiankarel.tutorialapplication.R
+import de.sebastiankarel.tutorialapplication.databinding.FragmentListBinding
 import de.sebastiankarel.tutorialapplication.viewmodel.ListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,12 +24,14 @@ class ListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_list, container, false)
+        val binding = FragmentListBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.adapter = adapter as RecyclerView.Adapter<RecyclerView.ViewHolder>
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupAdapter(view)
 
         view.findViewById<Button>(R.id.button)?.setOnClickListener {
             viewModel.updateListItems()
@@ -37,14 +40,5 @@ class ListFragment : Fragment() {
         viewModel.items.observe(viewLifecycleOwner, {
             adapter.items = it ?: listOf()
         })
-    }
-
-    private fun setupAdapter(view: View) {
-        val rv = view.findViewById<RecyclerView>(R.id.rv)
-        val llm = LinearLayoutManager(rv.context)
-        val itemDecor = DividerItemDecoration(rv.context, llm.orientation)
-        rv.layoutManager = llm
-        rv.addItemDecoration(itemDecor)
-        rv.adapter = adapter
     }
 }
