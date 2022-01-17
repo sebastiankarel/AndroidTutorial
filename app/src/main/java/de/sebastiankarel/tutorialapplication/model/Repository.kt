@@ -1,11 +1,12 @@
 package de.sebastiankarel.tutorialapplication.model
 
-class Repository {
+class Repository(private val remoteUserService: RemoteUserService) {
 
-    fun getItems(): List<ListItem> {
-        val result = mutableListOf<ListItem>()
-        for (i in 0..100) {
-            result.add(ListItem(i, "Title $i", "Text $i"))
+    suspend fun getItems(): List<User> {
+        val result = mutableListOf<User>()
+        val response = remoteUserService.getUsers(20)
+        response.results.forEach {
+            result.add(ApiModelMapper.mapUser(it))
         }
         return result
     }

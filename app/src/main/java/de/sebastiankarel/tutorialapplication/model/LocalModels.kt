@@ -1,7 +1,7 @@
 package de.sebastiankarel.tutorialapplication.model
 
-data class ListItem(
-    val id: Int,
-    val title: String,
-    val text: String
+data class User(
+    val name: String,
+    val email: String,
+    val thumb: String
 )

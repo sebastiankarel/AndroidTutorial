@@ -7,11 +7,11 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import de.sebastiankarel.tutorialapplication.R
 import de.sebastiankarel.tutorialapplication.databinding.ItemsListBinding
-import de.sebastiankarel.tutorialapplication.model.ListItem
+import de.sebastiankarel.tutorialapplication.model.User
 
-class ListItemAdapter(private val onClick: (id: Int) -> Unit) : RecyclerView.Adapter<ListItemAdapter.ListItemViewHolder>() {
+class ListItemAdapter(private val onClick: (id: String) -> Unit) : RecyclerView.Adapter<ListItemAdapter.ListItemViewHolder>() {
 
-    var items: List<ListItem> = listOf()
+    var items: List<User> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -24,15 +24,15 @@ class ListItemAdapter(private val onClick: (id: Int) -> Unit) : RecyclerView.Ada
     }
 
     override fun onBindViewHolder(holder: ListItemViewHolder, position: Int) {
-        holder.binding.title = items[position].title
-        holder.binding.text = items[position].text
-        holder.binding.img.load("https://placekitten.com/g/200/300") {
+        holder.binding.title = items[position].name
+        holder.binding.text = items[position].email
+        holder.binding.img.load(items[position].thumb) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_foreground)
             transformations(CircleCropTransformation())
         }
         holder.binding.root.setOnClickListener {
-            onClick(items[position].id)
+            onClick(items[position].name)
         }
     }
 
