@@ -28,7 +28,7 @@ class ListItemAdapter(private val onClick: (id: String) -> Unit) : RecyclerView.
         holder.binding.text = items[position].email
         holder.binding.img.load(items[position].thumb) {
             crossfade(true)
-            placeholder(R.drawable.ic_launcher_foreground)
+            placeholder(R.drawable.baseline_photo_camera_24)
             transformations(CircleCropTransformation())
         }
         holder.binding.root.setOnClickListener {
