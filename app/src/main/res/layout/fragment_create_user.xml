@@ -1,28 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
 
-    <ImageView
-        android:id="@+id/profile_img"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/baseline_photo_camera_24"
-        android:layout_marginTop="80dp"/>
+    <data>
+        <import type="android.view.View"/>
 
-    <Button
-        android:id="@+id/take_photo_btn"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="take photo"
-        app:layout_constraintStart_toStartOf="@id/profile_img"
-        app:layout_constraintEnd_toEndOf="@id/profile_img"
-        app:layout_constraintTop_toBottomOf="@id/profile_img"
-        android:layout_marginTop="10dp"/>
+        <variable
+            name="viewModel"
+            type="de.sebastiankarel.tutorialapplication.viewmodel.CreateUserViewModel" />
+    </data>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/profile_img"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/baseline_photo_camera_24"
+                android:layout_marginTop="48dp"
+                app:bmpImage="@{viewModel.image}"/>
+
+            <Button
+                android:id="@+id/take_photo_btn"
+                style="@style/AppTheme.Button"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Take Photo"
+                app:layout_constraintStart_toStartOf="@id/profile_img"
+                app:layout_constraintEnd_toEndOf="@id/profile_img"
+                app:layout_constraintTop_toBottomOf="@id/profile_img"
+                android:layout_marginTop="10dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_et_layout"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/take_photo_btn"
+                android:layout_marginTop="48dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/name_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:textChangedListener="@{viewModel.nameChangedListener}"
+                    android:imeOptions="actionDone"
+                    android:hint="Name" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_et_layout"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name_et_layout"
+                android:layout_marginTop="16dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:textChangedListener="@{viewModel.emailChangedListener}"
+                    android:inputType="textEmailAddress"
+                    android:imeOptions="actionDone"
+                    android:hint="Email" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:layout_constraintStart_toStartOf="@id/email_et_layout"
+                app:layout_constraintEnd_toEndOf="@id/email_et_layout"
+                app:layout_constraintTop_toBottomOf="@id/email_et_layout"
+                android:layout_marginTop="16dp"
+                android:visibility="@{viewModel.loading ? View.VISIBLE : View.GONE}"/>
+
+            <Button
+                android:id="@+id/submit_btn"
+                style="@style/AppTheme.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                app:layout_constraintStart_toStartOf="@id/email_et_layout"
+                app:layout_constraintEnd_toEndOf="@id/email_et_layout"
+                app:layout_constraintTop_toBottomOf="@id/email_et_layout"
+                android:layout_marginTop="16dp"
+                android:onClick="@{() -> viewModel.submitUser()}"
+                android:visibility="@{viewModel.loading ? View.GONE : View.VISIBLE}"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

@@ -1,13 +1,18 @@
 package de.sebastiankarel.tutorialapplication.model
 
-class Repository(private val remoteUserService: RemoteUserService) {
+import kotlinx.coroutines.flow.Flow
 
-    suspend fun getItems(): List<User> {
-        val result = mutableListOf<User>()
-        val response = remoteUserService.getUsers(20)
-        response.results.forEach {
-            result.add(ApiModelMapper.mapUser(it))
-        }
-        return result
-    }
+interface Repository {
+
+    fun users(): Flow<List<User>>
+
+    suspend fun getAllIds(): List<Int>
+
+    suspend fun fetchUsers(numUsers: Int)
+
+    suspend fun addUser(user: User)
+
+    suspend fun getUserById(id: Int): User
+
+    suspend fun deleteUser(id: Int)
 }

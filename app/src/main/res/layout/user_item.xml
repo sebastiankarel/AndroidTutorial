@@ -3,12 +3,8 @@
 
     <data>
         <variable
-            name="title"
-            type="String" />
-
-        <variable
-            name="text"
-            type="String" />
+            name="user"
+            type="de.sebastiankarel.tutorialapplication.model.User" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,8 +22,8 @@
             android:layout_marginStart="10dp"
             app:layout_constraintStart_toEndOf="@id/img"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@{title}"/>
+            app:layout_constraintTop_toTopOf="@id/img"
+            android:text="@{user.name}"/>
 
         <TextView
             android:id="@+id/text_tv"
@@ -37,7 +33,7 @@
             app:layout_constraintStart_toEndOf="@id/img"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_tv"
-            android:text="@{text}"/>
+            android:text="@{user.email}"/>
 
         <ImageView
             android:id="@+id/img"
@@ -47,7 +43,8 @@
             android:layout_marginVertical="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:user="@{user}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

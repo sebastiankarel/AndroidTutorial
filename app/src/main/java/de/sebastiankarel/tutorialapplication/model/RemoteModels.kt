@@ -19,5 +19,6 @@ data class RemoteUserName(
 )
 
 data class RemoteUserPicture(
-    val thumbnail: String
+    val thumbnail: String,
+    val large: String
 )

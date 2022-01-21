@@ -5,22 +5,36 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.sebastiankarel.tutorialapplication.model.User
 import de.sebastiankarel.tutorialapplication.model.Repository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ListViewModel(private val repository: Repository) : ViewModel() {
 
-    private val _items = MutableLiveData<List<User>>()
-    val items: LiveData<List<User>> = _items
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> = _error
 
-    fun updateListItems() {
-        viewModelScope.launch {
+    fun users() = repository.users()
+
+    fun fetchUser() {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = repository.getItems()
-                _items.postValue(response)
+                repository.fetchUsers(1)
             } catch (e: Exception) {
-                Log.e(ListViewModel::class.java.simpleName, "Error in fetching response", e)
+                Log.e(ListViewModel::class.java.simpleName, "Error while fetching user", e)
+                _error.postValue(e.message)
+            }
+        }
+    }
+
+    fun deleteUser() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val ids = repository.getAllIds()
+                repository.deleteUser(ids.random())
+            } catch (e: Exception) {
+                Log.e(ListViewModel::class.java.simpleName, "Error while fetching user", e)
+                _error.postValue(e.message)
             }
         }
     }
