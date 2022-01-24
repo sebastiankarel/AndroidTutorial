@@ -12,23 +12,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.google.android.material.textfield.TextInputEditText
 import de.sebastiankarel.tutorialapplication.R
 import de.sebastiankarel.tutorialapplication.databinding.FragmentCreateUserBinding
 import de.sebastiankarel.tutorialapplication.util.EventObserver
 import de.sebastiankarel.tutorialapplication.viewmodel.CreateUserViewModel
-import de.sebastiankarel.tutorialapplication.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreateUserFragment : Fragment() {
 
-    private val viewModel: CreateUserViewModel by viewModel()
-    private val args: CreateUserFragmentArgs by navArgs()
-
-    private lateinit var nameEt: TextInputEditText
-    private lateinit var emailEt: TextInputEditText
+    private val viewModel: CreateUserViewModel by sharedViewModel()
 
     private val requestPermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         if (it.all { it.value }) {
@@ -42,8 +34,6 @@ class CreateUserFragment : Fragment() {
         val binding = FragmentCreateUserBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        nameEt = binding.nameEditText
-        emailEt = binding.emailEditText
         return binding.root
     }
 
@@ -65,11 +55,6 @@ class CreateUserFragment : Fragment() {
         viewModel.success.observe(viewLifecycleOwner, EventObserver {
             if (it) findNavController().navigate(R.id.action_createUserFragment_to_listFragment)
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.setPhoto(args.photoId)
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSION.all {

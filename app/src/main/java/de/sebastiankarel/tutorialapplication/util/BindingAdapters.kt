@@ -38,3 +38,8 @@ fun bmpImage(imageView: ImageView, bitmap: Bitmap?) {
 fun textChangedListener(et: TextInputEditText, listener: (newText: String) -> Unit) {
     et.addTextChangedListener { listener(it.toString()) }
 }
+
+@BindingAdapter("textWhenChanged")
+fun textWhenChanged(et: TextInputEditText, text: String?) {
+    text?.let { if (et.text.toString() != it) et.setText(it) }
+}

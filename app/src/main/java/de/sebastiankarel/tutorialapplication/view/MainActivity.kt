@@ -7,18 +7,12 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import de.sebastiankarel.tutorialapplication.R
-import de.sebastiankarel.tutorialapplication.viewmodel.MainViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-
-    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        viewModel.deleteSpuriousPhotos()
     }
 
     fun showErrorSnackbar(message: String) {

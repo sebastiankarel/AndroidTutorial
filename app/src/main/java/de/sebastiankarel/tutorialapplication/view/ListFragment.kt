@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import de.sebastiankarel.tutorialapplication.R
 import de.sebastiankarel.tutorialapplication.databinding.FragmentListBinding
 import de.sebastiankarel.tutorialapplication.model.User
@@ -41,7 +40,7 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.create_user_btn)?.setOnClickListener {
-            findNavController().navigate(ListFragmentDirections.actionListFragmentToCreateUserFragment(-1))
+            findNavController().navigate(R.id.action_listFragment_to_createUserFragment)
         }
 
         viewModel.error.observe(viewLifecycleOwner, EventObserver {

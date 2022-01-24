@@ -9,6 +9,7 @@ import de.sebastiankarel.tutorialapplication.model.Repository
 import de.sebastiankarel.tutorialapplication.util.Event
 import de.sebastiankarel.tutorialapplication.util.getMessageOrDefault
 import de.sebastiankarel.tutorialapplication.util.toBitmap
+import de.sebastiankarel.tutorialapplication.util.toByteArray
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,44 +24,31 @@ class CreateUserViewModel(private val repository: Repository) : ViewModel() {
     private val _error = MutableLiveData<Event<String>>()
     val error: LiveData<Event<String>> = _error
 
-    private var photoId: Long = -1
+    private val _name = MutableLiveData<String>()
+    val name: LiveData<String> = _name
+    private val _email = MutableLiveData<String>()
+    val email: LiveData<String> = _email
     private val _image = MutableLiveData<Bitmap>()
     val image: LiveData<Bitmap> = _image
 
-    private var _name: String = ""
     val nameChangedListener: (name: String) -> Unit = {
-        _name = it
+        _name.postValue(it)
     }
 
-    private var _email: String = ""
     val emailChangedListener: (name: String) -> Unit = {
-        _email = it
+        _email.postValue(it)
     }
 
-    fun setPhoto(photoId: Long) {
-        if (photoId < 0) return
-        viewModelScope.launch {
-            try {
-                _loading.postValue(true)
-                if (this@CreateUserViewModel.photoId >= 0) {
-                    repository.deletePhotoById(this@CreateUserViewModel.photoId)
-                }
-                this@CreateUserViewModel.photoId = photoId
-                val photo = repository.getPhotoById(photoId)
-                _image.postValue(photo?.imageData?.toBitmap())
-            } catch (e: Exception) {
-                _error.postValue(Event(e.getMessageOrDefault()))
-            } finally {
-                _loading.postValue(false)
-            }
-        }
-    }
+    fun setPhoto(photo: Bitmap) = _image.postValue(photo)
 
     fun submitUser() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _loading.postValue(false)
-                repository.addUser(_name, _email, photoId)
+                val imageData = _image.value?.toByteArray()
+                val photoId = if (imageData != null) repository.addPhoto(imageData) else -1
+                repository.addUser(_name.value ?: "", _email.value ?: "", photoId)
+                clearData()
                 _success.postValue(Event(true))
             } catch (e: Exception) {
                 _error.postValue(Event(e.getMessageOrDefault()))
@@ -70,7 +58,9 @@ class CreateUserViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun getEmail(): String = _email
-
-    fun getName(): String = _name
+    private fun clearData() {
+        _name.postValue("")
+        _email.postValue("")
+        _image.postValue(null)
+    }
 }

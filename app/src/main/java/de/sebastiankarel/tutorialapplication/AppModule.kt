@@ -29,8 +29,6 @@ val appModule = module {
     viewModel { ListViewModel(get()) }
     viewModel { CreateUserViewModel(get()) }
     viewModel { DetailsViewModel(get()) }
-    viewModel { CameraViewModel(get()) }
-    viewModel { MainViewModel(get()) }
 }
 
 fun getRemoteUserService(): RemoteUserService {

@@ -19,13 +19,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.sebastiankarel.tutorialapplication.R
 import de.sebastiankarel.tutorialapplication.databinding.FragmentCameraBinding
 import de.sebastiankarel.tutorialapplication.util.EventObserver
-import de.sebastiankarel.tutorialapplication.viewmodel.CameraViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import de.sebastiankarel.tutorialapplication.viewmodel.CreateUserViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class CameraFragment : Fragment() {
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-    private val viewModel: CameraViewModel by viewModel()
+    private val viewModel: CreateUserViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentCameraBinding.inflate(inflater, container, false)
@@ -39,10 +39,6 @@ class CameraFragment : Fragment() {
 
         viewModel.error.observe(viewLifecycleOwner, EventObserver {
             (activity as MainActivity).showErrorSnackbar(it)
-        })
-
-        viewModel.success.observe(viewLifecycleOwner, EventObserver {
-            findNavController().navigate(CameraFragmentDirections.actionCameraFragmentToCreateUserFragment(it))
         })
 
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { switchCamera(view) }
@@ -72,7 +68,8 @@ class CameraFragment : Fragment() {
                     override fun onCaptureSuccess(image: ImageProxy) {
                         val bitmap = imageProxyToBitmap(image, image.imageInfo.rotationDegrees)
                         image.close()
-                        viewModel.storePhoto(bitmap)
+                        viewModel.setPhoto(bitmap)
+                        findNavController().navigate(R.id.action_cameraFragment_to_createUserFragment)
                     }
 
                     override fun onError(exception: ImageCaptureException) {

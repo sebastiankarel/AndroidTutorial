@@ -5,7 +5,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="de.sebastiankarel.tutorialapplication.viewmodel.CameraViewModel" />
+            type="de.sebastiankarel.tutorialapplication.viewmodel.CreateUserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

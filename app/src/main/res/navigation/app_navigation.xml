@@ -41,10 +41,6 @@
         <action
             android:id="@+id/action_createUserFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
-        <argument
-            android:name="photoId"
-            app:argType="long"
-            android:defaultValue="-1L" />
         <action
             android:id="@+id/action_createUserFragment_to_listFragment"
             app:destination="@id/listFragment" />
