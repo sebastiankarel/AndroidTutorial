@@ -10,16 +10,25 @@ data class User(
     @ColumnInfo(name = "id")  val id: Int = 0,
     @ColumnInfo(name = "name") val name: String = "",
     @ColumnInfo(name = "email") val email: String = "",
-    @ColumnInfo(name = "thumb_url") val thumbUrl: String? = null,
+    @ColumnInfo(name = "photo_id") val photoId: Long = -1,
+    @ColumnInfo(name = "time_stamp") val timeStamp: Long
+)
+
+@Entity(tableName = "photos")
+data class Photo(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Long = 0,
     @ColumnInfo(name = "image_url") val imageUrl: String? = null,
     @ColumnInfo(name = "image_data", typeAffinity = ColumnInfo.BLOB) val imageData: ByteArray? = null,
-    @ColumnInfo(name = "time_stamp") val timeStamp: Long
 ) {
+    fun isLocal(): Boolean = imageData != null
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as User
+        other as Photo
 
         if (id != other.id) return false
 
@@ -27,6 +36,6 @@ data class User(
     }
 
     override fun hashCode(): Int {
-        return id
+        return id.toInt()
     }
 }

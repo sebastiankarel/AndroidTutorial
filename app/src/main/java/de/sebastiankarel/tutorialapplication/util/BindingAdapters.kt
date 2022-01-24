@@ -1,7 +1,6 @@
 package de.sebastiankarel.tutorialapplication.util
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.widget.ImageView
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.BindingAdapter
@@ -23,52 +22,6 @@ fun userAdapter(rv: RecyclerView, adapter: ListAdapter<User, UserListAdapter.Lis
     rv.layoutManager = llm
     rv.addItemDecoration(itemDecor)
     rv.adapter = adapter
-}
-
-@BindingAdapter(value = ["user", "preferLargeImage"], requireAll = false)
-fun user(imageView: ImageView, user: User?, preferLargeImage: Boolean = false) {
-    if (preferLargeImage) {
-        user?.imageUrl?.let {
-            imageView.load(it) {
-                crossfade(true)
-                placeholder(R.drawable.baseline_photo_camera_24)
-                transformations(CircleCropTransformation())
-            }
-        } ?: run {
-            user?.thumbUrl?.let {
-                imageView.load(it) {
-                    crossfade(true)
-                    placeholder(R.drawable.baseline_photo_camera_24)
-                    transformations(CircleCropTransformation())
-                }
-            }
-        }
-    } else {
-        user?.thumbUrl?.let {
-            imageView.load(it) {
-                crossfade(true)
-                placeholder(R.drawable.baseline_photo_camera_24)
-                transformations(CircleCropTransformation())
-            }
-        } ?: run {
-            user?.imageUrl?.let {
-                imageView.load(it) {
-                    crossfade(true)
-                    placeholder(R.drawable.baseline_photo_camera_24)
-                    transformations(CircleCropTransformation())
-                }
-            }
-        }
-    }
-    user?.imageData?.let {
-        val options = BitmapFactory.Options().apply { inMutable = true }
-        val bmp = BitmapFactory.decodeByteArray(it, 0, it.size, options)
-        imageView.load(bmp) {
-            crossfade(true)
-            placeholder(R.drawable.baseline_photo_camera_24)
-            transformations(CircleCropTransformation())
-        }
-    }
 }
 
 @BindingAdapter("bmpImage")

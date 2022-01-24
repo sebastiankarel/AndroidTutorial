@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import de.sebastiankarel.tutorialapplication.databinding.UserItemBinding
 import de.sebastiankarel.tutorialapplication.model.User
+import de.sebastiankarel.tutorialapplication.util.ImageLoader
 
 class UserListAdapter(
+    private val imageLoader: ImageLoader,
     private val onClick: (id: Int) -> Unit
 ) : ListAdapter<User, UserListAdapter.ListItemViewHolder>(UserDiffCallback()) {
 
@@ -24,6 +26,7 @@ class UserListAdapter(
     inner class ListItemViewHolder(private val binding: UserItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(user: User, onClick: (id: Int) -> Unit) {
+            imageLoader.loadImage(binding.img, user.photoId)
             binding.user = user
             binding.root.setOnClickListener { onClick(user.id) }
             binding.executePendingBindings()

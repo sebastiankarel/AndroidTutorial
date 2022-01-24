@@ -42,9 +42,9 @@
             android:id="@+id/action_createUserFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
         <argument
-            android:name="image"
-            app:argType="android.graphics.Bitmap"
-            app:nullable="true" />
+            android:name="photoId"
+            app:argType="long"
+            android:defaultValue="-1L" />
         <action
             android:id="@+id/action_createUserFragment_to_listFragment"
             app:destination="@id/listFragment" />

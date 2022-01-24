@@ -1,25 +1,26 @@
 package de.sebastiankarel.tutorialapplication.viewmodel
 
-import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.sebastiankarel.tutorialapplication.model.Repository
 import de.sebastiankarel.tutorialapplication.model.User
+import de.sebastiankarel.tutorialapplication.util.Event
+import de.sebastiankarel.tutorialapplication.util.getMessageOrDefault
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(private val repository: Repository) : ViewModel() {
 
-    private val _success = MutableLiveData<Boolean>()
-    val success: LiveData<Boolean> = _success
+    private val _success = MutableLiveData<Event<Boolean>>()
+    val success: LiveData<Event<Boolean>> = _success
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val _error = MutableLiveData<Event<String>>()
+    val error: LiveData<Event<String>> = _error
 
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
@@ -31,7 +32,7 @@ class DetailsViewModel(private val repository: Repository) : ViewModel() {
                 val user = repository.getUserById(id)
                 _user.postValue(user)
             } catch (e: Exception) {
-                _error.postValue(e.message)
+                _error.postValue(Event(e.getMessageOrDefault()))
             } finally {
                 _loading.postValue(false)
             }
@@ -43,9 +44,9 @@ class DetailsViewModel(private val repository: Repository) : ViewModel() {
             try {
                 _loading.postValue(true)
                 repository.deleteUser(id)
-                _success.postValue(true)
+                _success.postValue(Event(true))
             } catch (e: Exception) {
-                _error.postValue(e.message)
+                _error.postValue(Event(e.getMessageOrDefault()))
             } finally {
                 _loading.postValue(false)
             }

@@ -17,17 +17,33 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.sebastiankarel.tutorialapplication.R
+import de.sebastiankarel.tutorialapplication.databinding.FragmentCameraBinding
+import de.sebastiankarel.tutorialapplication.util.EventObserver
+import de.sebastiankarel.tutorialapplication.viewmodel.CameraViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CameraFragment : Fragment() {
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    private val viewModel: CameraViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_camera, container, false)
+        val binding = FragmentCameraBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.error.observe(viewLifecycleOwner, EventObserver {
+            (activity as MainActivity).showErrorSnackbar(it)
+        })
+
+        viewModel.success.observe(viewLifecycleOwner, EventObserver {
+            findNavController().navigate(CameraFragmentDirections.actionCameraFragmentToCreateUserFragment(it))
+        })
 
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { switchCamera(view) }
         startCamera(view)
@@ -56,7 +72,7 @@ class CameraFragment : Fragment() {
                     override fun onCaptureSuccess(image: ImageProxy) {
                         val bitmap = imageProxyToBitmap(image, image.imageInfo.rotationDegrees)
                         image.close()
-                        findNavController().navigate(CameraFragmentDirections.actionCameraFragmentToCreateUserFragment(bitmap))
+                        viewModel.storePhoto(bitmap)
                     }
 
                     override fun onError(exception: ImageCaptureException) {
@@ -88,7 +104,7 @@ class CameraFragment : Fragment() {
     private fun rotateImage(image: Bitmap, degrees: Int): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(degrees.toFloat())
-        val scaled = Bitmap.createScaledBitmap(image, image.width / 8, image.height / 8, true)
+        val scaled = Bitmap.createScaledBitmap(image, image.width / 4, image.height / 4, true)
         return Bitmap.createBitmap(scaled, 0, 0, scaled.width, scaled.height, matrix, true)
     }
 }

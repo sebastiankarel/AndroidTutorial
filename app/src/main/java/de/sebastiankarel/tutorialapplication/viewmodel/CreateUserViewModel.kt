@@ -6,54 +6,71 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.sebastiankarel.tutorialapplication.model.Repository
-import de.sebastiankarel.tutorialapplication.model.User
-import de.sebastiankarel.tutorialapplication.util.toByteArray
+import de.sebastiankarel.tutorialapplication.util.Event
+import de.sebastiankarel.tutorialapplication.util.getMessageOrDefault
+import de.sebastiankarel.tutorialapplication.util.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CreateUserViewModel(private val repository: Repository) : ViewModel() {
 
-    private val _success = MutableLiveData<Boolean>()
-    val success: LiveData<Boolean> = _success
+    private val _success = MutableLiveData<Event<Boolean>>()
+    val success: LiveData<Event<Boolean>> = _success
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val _error = MutableLiveData<Event<String>>()
+    val error: LiveData<Event<String>> = _error
 
+    private var photoId: Long = -1
     private val _image = MutableLiveData<Bitmap>()
     val image: LiveData<Bitmap> = _image
 
-    private var name: String = ""
+    private var _name: String = ""
     val nameChangedListener: (name: String) -> Unit = {
-        name = it
+        _name = it
     }
 
-    private var email: String = ""
+    private var _email: String = ""
     val emailChangedListener: (name: String) -> Unit = {
-        email = it
+        _email = it
     }
 
-    fun setImage(image: Bitmap?) = _image.postValue(image)
-
-    fun submitUser() {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun setPhoto(photoId: Long) {
+        if (photoId < 0) return
+        viewModelScope.launch {
             try {
-                _loading.postValue(false)
-                val user = User(
-                    name = name,
-                    email = email,
-                    imageData = _image.value?.toByteArray(),
-                    timeStamp = System.currentTimeMillis()
-                )
-                repository.addUser(user)
-                _success.postValue(true)
+                _loading.postValue(true)
+                if (this@CreateUserViewModel.photoId >= 0) {
+                    repository.deletePhotoById(this@CreateUserViewModel.photoId)
+                }
+                this@CreateUserViewModel.photoId = photoId
+                val photo = repository.getPhotoById(photoId)
+                _image.postValue(photo?.imageData?.toBitmap())
             } catch (e: Exception) {
-                _error.postValue(e.message)
+                _error.postValue(Event(e.getMessageOrDefault()))
             } finally {
                 _loading.postValue(false)
             }
         }
     }
+
+    fun submitUser() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _loading.postValue(false)
+                repository.addUser(_name, _email, photoId)
+                _success.postValue(Event(true))
+            } catch (e: Exception) {
+                _error.postValue(Event(e.getMessageOrDefault()))
+            } finally {
+                _loading.postValue(false)
+            }
+        }
+    }
+
+    fun getEmail(): String = _email
+
+    fun getName(): String = _name
 }

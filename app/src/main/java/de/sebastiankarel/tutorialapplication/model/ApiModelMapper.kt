@@ -2,13 +2,16 @@ package de.sebastiankarel.tutorialapplication.model
 
 object ApiModelMapper {
 
-    fun mapUser(remoteUser: RemoteUser): User {
-        return User(
+    fun mapUser(remoteUser: RemoteUser, photoId: Long): User {
+       return User(
             name = "${remoteUser.name.firstName} ${remoteUser.name.lastName}",
             email = remoteUser.email,
-            thumbUrl = remoteUser.picture.thumbnail,
-            imageUrl = remoteUser.picture.large,
+            photoId = photoId,
             timeStamp = System.currentTimeMillis()
         )
+    }
+
+    fun mapPhoto(remoteUser: RemoteUser): Photo {
+        return Photo(imageUrl = remoteUser.picture.large)
     }
 }

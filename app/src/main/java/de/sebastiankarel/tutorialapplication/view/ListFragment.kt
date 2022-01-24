@@ -13,14 +13,18 @@ import androidx.recyclerview.widget.RecyclerView
 import de.sebastiankarel.tutorialapplication.R
 import de.sebastiankarel.tutorialapplication.databinding.FragmentListBinding
 import de.sebastiankarel.tutorialapplication.model.User
+import de.sebastiankarel.tutorialapplication.util.EventObserver
+import de.sebastiankarel.tutorialapplication.util.ImageLoader
 import de.sebastiankarel.tutorialapplication.viewmodel.ListViewModel
 import kotlinx.coroutines.flow.collect
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ListFragment : Fragment() {
 
     private val viewModel: ListViewModel by viewModel()
-    private val adapter: UserListAdapter = UserListAdapter {
+    private val imageLoader: ImageLoader by inject()
+    private val adapter: UserListAdapter = UserListAdapter(imageLoader) {
         val directions = ListFragmentDirections.actionListFragmentToDetailsFragment(it)
         findNavController().navigate(directions)
     }
@@ -37,12 +41,12 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.create_user_btn)?.setOnClickListener {
-            findNavController().navigate(ListFragmentDirections.actionListFragmentToCreateUserFragment(null))
+            findNavController().navigate(ListFragmentDirections.actionListFragmentToCreateUserFragment(-1))
         }
 
-        viewModel.error.observe(viewLifecycleOwner) {
+        viewModel.error.observe(viewLifecycleOwner, EventObserver {
             (activity as MainActivity).showErrorSnackbar(it)
-        }
+        })
 
         lifecycleScope.launchWhenResumed {
             viewModel.users().collect {
