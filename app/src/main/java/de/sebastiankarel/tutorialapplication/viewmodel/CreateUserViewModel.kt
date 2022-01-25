@@ -44,7 +44,7 @@ class CreateUserViewModel(private val repository: Repository) : ViewModel() {
     fun submitUser() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _loading.postValue(false)
+                _loading.postValue(true)
                 val imageData = _image.value?.toByteArray()
                 val photoId = if (imageData != null) repository.addPhoto(imageData) else -1
                 repository.addUser(_name.value ?: "", _email.value ?: "", photoId)
