@@ -38,9 +38,7 @@
             app:layout_constraintEnd_toStartOf="@id/delete_user_btn"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="4dp"
-            android:text="+"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:text="Get Next Users"
             android:onClick="@{() -> viewModel.fetchUser()}"/>
 
         <Button
@@ -53,10 +51,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp"
             android:layout_marginStart="4dp"
-            android:text="-"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:onClick="@{() -> viewModel.deleteUser()}"/>
+            android:text="Clear Users"
+            android:onClick="@{() -> viewModel.deleteUsers()}"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
@@ -66,8 +62,18 @@
             app:layout_constraintTop_toBottomOf="@id/fetch_user_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/logout_btn"
+            android:layout_marginBottom="16dp"
             app:user_adapter="@{adapter}"/>
+
+        <Button
+            android:id="@+id/logout_btn"
+            style="@style/AppTheme.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{() -> viewModel.logout() }"
+            android:text="Logout"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

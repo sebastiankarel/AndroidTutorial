@@ -26,4 +26,7 @@ interface UserDao {
 
     @Query("SELECT photo_id FROM users WHERE id = :id")
     suspend fun getPhotoIdForUserId(id: Int): Long
+
+    @Query("DELETE FROM users")
+    suspend fun deleteAllUsers()
 }

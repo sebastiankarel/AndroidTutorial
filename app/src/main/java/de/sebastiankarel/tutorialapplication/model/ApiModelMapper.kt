@@ -4,14 +4,14 @@ object ApiModelMapper {
 
     fun mapUser(remoteUser: RemoteUser, photoId: Long): User {
        return User(
-            name = "${remoteUser.name.firstName} ${remoteUser.name.lastName}",
-            email = remoteUser.email,
+            name = remoteUser.name ?: "",
+            email = remoteUser.email ?: "",
             photoId = photoId,
             timeStamp = System.currentTimeMillis()
         )
     }
 
     fun mapPhoto(remoteUser: RemoteUser): Photo {
-        return Photo(imageUrl = remoteUser.picture.large)
+        return Photo(imageUrl = remoteUser.profilePicture)
     }
 }

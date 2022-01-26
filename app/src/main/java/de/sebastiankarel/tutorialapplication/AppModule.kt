@@ -3,12 +3,8 @@ package de.sebastiankarel.tutorialapplication
 import android.content.Context
 import androidx.room.Room
 import com.google.gson.GsonBuilder
-import de.sebastiankarel.tutorialapplication.model.RemoteUserService
-import de.sebastiankarel.tutorialapplication.model.Repository
-import de.sebastiankarel.tutorialapplication.model.RepositoryImpl
-import de.sebastiankarel.tutorialapplication.model.persistence.AppDatabase
-import de.sebastiankarel.tutorialapplication.model.persistence.PhotoDao
-import de.sebastiankarel.tutorialapplication.model.persistence.UserDao
+import de.sebastiankarel.tutorialapplication.model.*
+import de.sebastiankarel.tutorialapplication.model.persistence.*
 import de.sebastiankarel.tutorialapplication.util.ImageLoader
 import de.sebastiankarel.tutorialapplication.util.ImageLoaderImpl
 import de.sebastiankarel.tutorialapplication.viewmodel.*
@@ -23,23 +19,41 @@ val appModule = module {
     single { getDatabase(androidContext()) }
     single { getUserDao(get()) }
     single { getPhotoDao(get()) }
-    single { getRemoteUserService() }
+    single { AppPreferencesImpl(androidContext()) as AppPreferences }
+    single { AuthInterceptor(get()) }
+    single { getRetrofit(get()) }
+    single { getRemoteUserService(get()) }
+    single { getRemoteAuthService(get()) }
     single { RepositoryImpl(get(), get(), get()) as Repository }
     single { ImageLoaderImpl(get()) as ImageLoader }
-    viewModel { ListViewModel(get()) }
+    single { AuthRepositoryImpl(get(), get()) as AuthRepository }
+    viewModel { ListViewModel(get(), get(), get()) }
     viewModel { CreateUserViewModel(get()) }
     viewModel { DetailsViewModel(get()) }
+    viewModel { LoginViewModel(get()) }
+    viewModel { RegisterViewModel(get()) }
+    viewModel { MainViewModel(get()) }
 }
 
-fun getRemoteUserService(): RemoteUserService {
-    val client = OkHttpClient().newBuilder().build()
+fun getRetrofit(authInterceptor: AuthInterceptor): Retrofit {
+    val client = OkHttpClient()
+        .newBuilder()
+        .addInterceptor(authInterceptor)
+        .build()
     val gson = GsonBuilder().setLenient().create()
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://randomuser.me/")
+    return Retrofit.Builder()
+        .baseUrl("http://restapi.adequateshop.com/")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
+}
+
+fun getRemoteUserService(retrofit: Retrofit): RemoteUserService {
     return retrofit.create(RemoteUserService::class.java)
+}
+
+fun getRemoteAuthService(retrofit: Retrofit): RemoteAuthService {
+    return retrofit.create(RemoteAuthService::class.java)
 }
 
 fun getDatabase(appContext: Context): AppDatabase {

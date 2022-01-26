@@ -12,8 +12,8 @@ class RepositoryImpl(
 
     override fun users(): Flow<List<User>> = userDao.getAll()
 
-    override suspend fun fetchUsers(numUsers: Int) {
-        val remoteUsers = remoteUserService.getUsers(numUsers).results
+    override suspend fun fetchUsers(page: Int) {
+        val remoteUsers = remoteUserService.getUsers(page).data
         val photos = remoteUsers.map { ApiModelMapper.mapPhoto(it) }.toTypedArray()
         val photoIds = photoDao.addPhotos(*photos)
         val users = remoteUsers.mapIndexed { idx, user -> ApiModelMapper.mapUser(user, photoIds[idx]) }.toTypedArray()
@@ -54,5 +54,8 @@ class RepositoryImpl(
         userDao.deleteUserById(id)
     }
 
-    override suspend fun clearSpuriousImages() = photoDao.deleteSpuriousPhotos()
+    override suspend fun clearAllUsers() {
+        userDao.deleteAllUsers()
+        photoDao.deleteAllPhotos()
+    }
 }

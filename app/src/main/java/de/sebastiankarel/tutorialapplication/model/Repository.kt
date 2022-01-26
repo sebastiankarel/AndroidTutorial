@@ -8,7 +8,7 @@ interface Repository {
 
     suspend fun getAllIds(): List<Int>
 
-    suspend fun fetchUsers(numUsers: Int)
+    suspend fun fetchUsers(page: Int)
 
     suspend fun addPhoto(imageData: ByteArray): Long
 
@@ -22,5 +22,5 @@ interface Repository {
 
     suspend fun deleteUser(id: Int)
 
-    suspend fun clearSpuriousImages()
+    suspend fun clearAllUsers()
 }

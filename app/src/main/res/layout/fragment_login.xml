@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="de.sebastiankarel.tutorialapplication.viewmodel.LoginViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_et_layout"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="48dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textChangedListener="@{viewModel.emailChangedListener}"
+                app:textWhenChanged="@{viewModel.email}"
+                android:imeOptions="actionDone"
+                android:hint="Email" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_et_layout"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_et_layout"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textChangedListener="@{viewModel.passwordChangedListener}"
+                app:textWhenChanged="@{viewModel.password}"
+                android:inputType="numberPassword"
+                android:imeOptions="actionDone"
+                android:hint="Password" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintStart_toStartOf="@id/password_et_layout"
+            app:layout_constraintEnd_toEndOf="@id/password_et_layout"
+            app:layout_constraintTop_toBottomOf="@id/password_et_layout"
+            android:layout_marginTop="16dp"
+            android:visibility="@{viewModel.loading ? View.VISIBLE : View.GONE}"/>
+
+        <Button
+            android:id="@+id/submit_btn"
+            style="@style/AppTheme.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            app:layout_constraintStart_toStartOf="@id/password_et_layout"
+            app:layout_constraintEnd_toEndOf="@id/password_et_layout"
+            app:layout_constraintTop_toBottomOf="@id/password_et_layout"
+            android:layout_marginTop="16dp"
+            android:onClick="@{() -> viewModel.login()}"
+            android:visibility="@{viewModel.loading ? View.GONE : View.VISIBLE}"
+            android:enabled="@{viewModel.buttonEnabled}"/>
+
+        <Button
+            android:id="@+id/register_btn"
+            style="@style/AppTheme.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            app:layout_constraintStart_toStartOf="@id/password_et_layout"
+            app:layout_constraintEnd_toEndOf="@id/password_et_layout"
+            app:layout_constraintTop_toBottomOf="@id/submit_btn"
+            android:layout_marginTop="16dp"
+            android:visibility="@{viewModel.loading ? View.GONE : View.VISIBLE}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
